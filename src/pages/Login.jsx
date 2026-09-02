@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAppContext } from '../context/AppContext';
-import { LogIn, UserPlus } from 'lucide-react';
+import { LogIn, UserPlus, GraduationCap } from 'lucide-react';
 
 const Login = () => {
   const { login, registerStudent, registerStaff } = useAppContext();
@@ -72,10 +72,16 @@ const Login = () => {
     <div className="app-container flex-center" style={{ backgroundColor: 'var(--bg-primary)', padding: '2rem' }}>
       <div className="card" style={{ width: '100%', maxWidth: '400px', animation: 'fadeIn 0.5s ease-out' }}>
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-          <div style={{ width: '48px', height: '48px', borderRadius: 'var(--radius-md)', backgroundColor: 'var(--primary)', color: 'white', display: 'flex', justifyContent: 'center', alignItems: 'center', fontWeight: 'bold', fontSize: '1.25rem', margin: '0 auto 1rem auto' }}>
-            CL
+          <div style={{ width: '48px', height: '48px', borderRadius: 'var(--radius-md)', background: 'linear-gradient(135deg, #ef4444, #f59e0b, #10b981, #3b82f6, #a855f7, #ec4899)', color: 'white', display: 'flex', justifyContent: 'center', alignItems: 'center', fontWeight: 'bold', fontSize: '1.25rem', margin: '0 auto 1rem auto' }}>
+            <GraduationCap size={28} />
           </div>
-          <h2 style={{ margin: '0 0 0.5rem 0' }}>Welcome to CampusLeave</h2>
+          <h2 style={{ margin: '0 0 0.5rem 0' }}>
+            Welcome to {"CampusLeave".split('').map((char, i) => (
+              <span key={i} style={{ color: ['#ef4444', '#f97316', '#f59e0b', '#84cc16', '#22c55e', '#06b6d4', '#3b82f6', '#6366f1', '#a855f7', '#ec4899', '#f43f5e'][i] }}>
+                {char}
+              </span>
+            ))}
+          </h2>
           <p style={{ margin: 0, fontSize: '0.875rem' }}>
             {isRegistering ? 'Create an account' : 'Sign in to continue'}
           </p>

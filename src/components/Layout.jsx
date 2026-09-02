@@ -1,7 +1,7 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
 import { useAppContext } from '../context/AppContext';
-import { LogOut, User as UserIcon } from 'lucide-react';
+import { LogOut, User as UserIcon, GraduationCap } from 'lucide-react';
 
 const Layout = () => {
   const { currentUser, logout } = useAppContext();
@@ -18,10 +18,16 @@ const Layout = () => {
       }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <div style={{ width: '32px', height: '32px', borderRadius: 'var(--radius-md)', backgroundColor: 'var(--primary)', color: 'white', display: 'flex', justifyContent: 'center', alignItems: 'center', fontWeight: 'bold' }}>
-              CL
+            <div style={{ width: '32px', height: '32px', borderRadius: 'var(--radius-md)', background: 'linear-gradient(135deg, #ef4444, #f59e0b, #10b981, #3b82f6, #a855f7, #ec4899)', color: 'white', display: 'flex', justifyContent: 'center', alignItems: 'center', fontWeight: 'bold' }}>
+              <GraduationCap size={20} />
             </div>
-            <h1 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 700 }}>CampusLeave</h1>
+            <h1 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 700 }}>
+              {"CampusLeave".split('').map((char, i) => (
+                <span key={i} style={{ color: ['#ef4444', '#f97316', '#f59e0b', '#84cc16', '#22c55e', '#06b6d4', '#3b82f6', '#6366f1', '#a855f7', '#ec4899', '#f43f5e'][i] }}>
+                  {char}
+                </span>
+              ))}
+            </h1>
           </div>
           
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>

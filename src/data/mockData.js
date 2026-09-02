@@ -6,6 +6,7 @@ export const MOCK_USERS = {
     role: "student",
     roll: "CSE2023012",
     department: "CSE",
+    section: "A",
     year: "3rd Year"
   },
   incharge: {
@@ -13,7 +14,8 @@ export const MOCK_USERS = {
     name: "Dr. Kumar",
     email: "kumar@college.edu",
     role: "incharge",
-    department: "CSE"
+    department: "CSE",
+    section: "A"
   },
   admin: {
     uid: "adm_001",
@@ -35,6 +37,7 @@ export const MOCK_REQUESTS = [
     name: "Rahul Sharma",
     roll: "CSE2023012",
     dept: "CSE",
+    section: "A",
     year: "3rd Year",
     reasonType: "Medical Emergency",
     reason: "Doctor appointment at City Hospital",
@@ -50,6 +53,7 @@ export const MOCK_REQUESTS = [
     name: "Sneha Reddy",
     roll: "MECH2021056",
     dept: "MECH",
+    section: "A",
     year: "4th Year",
     reasonType: "Personal",
     reason: "Family function",

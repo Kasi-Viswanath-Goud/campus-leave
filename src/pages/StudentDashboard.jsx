@@ -5,12 +5,19 @@ import StatsCard from '../components/StatsCard';
 import { Send, FileText, CheckCircle, Clock } from 'lucide-react';
 
 const StudentDashboard = () => {
-  const { currentUser, requests, addRequest } = useAppContext();
+  const { currentUser, requests, addRequest, users } = useAppContext();
   
   const myRequests = requests.filter(r => r.roll === currentUser.roll);
   const pendingCount = myRequests.filter(r => r.status === 'pending').length;
   const approvedCount = myRequests.filter(r => r.status === 'approved').length;
   const leftCount = myRequests.filter(r => r.left).length;
+
+  const sectionIncharge = (users || []).find(
+    u => u.role === 'incharge' && 
+         u.department === currentUser.department && 
+         (u.section || 'A') === (currentUser.section || 'A') &&
+         (u.status === undefined || u.status === 'approved')
+  );
 
   const [formData, setFormData] = useState({
     reasonType: 'Medical Emergency',
@@ -59,6 +66,17 @@ const StudentDashboard = () => {
                 <input type="text" className="form-input mb-4" value={`${currentUser.name} (${currentUser.roll})`} disabled />
               </div>
               
+              <div className="form-group">
+                <label className="form-label">Approving Incharge</label>
+                <input 
+                  type="text" 
+                  className="form-input mb-4" 
+                  value={sectionIncharge ? `${sectionIncharge.name} (${sectionIncharge.email})` : 'Pending Assignment (No Incharge for this section)'} 
+                  disabled 
+                  style={{ color: sectionIncharge ? 'var(--text-primary)' : 'var(--text-tertiary)' }}
+                />
+              </div>
+
               <div className="form-group">
                 <label className="form-label">Reason Type</label>
                 <select 

@@ -7,8 +7,8 @@ import { FileText, CheckCircle, Clock, Users } from 'lucide-react';
 const InchargeDashboard = () => {
   const { currentUser, requests } = useAppContext();
   
-  // Filter for incharge's department
-  const deptRequests = requests.filter(r => r.dept === currentUser.department);
+  // Filter for incharge's department and section
+  const deptRequests = requests.filter(r => r.dept === currentUser.department && (r.section || 'A') === (currentUser.section || 'A'));
   
   const pendingRequests = deptRequests.filter(r => r.status === 'pending');
   const historyRequests = deptRequests.filter(r => r.status !== 'pending');
@@ -22,7 +22,7 @@ const InchargeDashboard = () => {
     <div>
       <div className="flex-between mb-6">
         <div>
-          <h2>Department Overview ({currentUser.department})</h2>
+          <h2>Section Overview ({currentUser.department} - {currentUser.section || 'A'})</h2>
           <p>Incharge Dashboard • {currentUser.name}</p>
         </div>
       </div>

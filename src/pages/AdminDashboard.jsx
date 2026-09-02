@@ -5,9 +5,10 @@ import StatsCard from '../components/StatsCard';
 import { Globe, CheckCircle, Clock, Navigation } from 'lucide-react';
 
 const AdminDashboard = () => {
-  const { requests } = useAppContext();
+  const { requests, users, approveUser, rejectUser } = useAppContext();
   
   const pendingRequests = requests.filter(r => r.status === 'pending');
+  const pendingStaff = (users || []).filter(u => u.role !== 'student' && u.status === 'pending');
   
   const totalCount = requests.length;
   const pendingCount = pendingRequests.length;
@@ -42,6 +43,33 @@ const AdminDashboard = () => {
         <StatsCard title="Approved" value={approvedCount} colorClass="text-success" icon={CheckCircle} />
         <StatsCard title="Left Campus" value={leftCount} colorClass="text-secondary" icon={Navigation} />
       </div>
+
+      {pendingStaff.length > 0 && (
+        <div className="mb-6">
+          <h3 className="mb-4">Pending Staff Approvals <span className="badge badge-pending">{pendingStaff.length}</span></h3>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1rem' }}>
+            {pendingStaff.map(staff => (
+              <div key={staff.uid} className="card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div>
+                  <h4 style={{ margin: '0 0 0.25rem 0', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    {staff.name}
+                    <span style={{ fontSize: '0.65rem', padding: '0.125rem 0.375rem', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-sm)', textTransform: 'uppercase' }}>
+                      {staff.role}
+                    </span>
+                  </h4>
+                  <p style={{ margin: 0, fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
+                    {staff.email} {staff.department ? `• ${staff.department}` : ''}{staff.section ? ` (${staff.section})` : ''}
+                  </p>
+                </div>
+                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                  <button className="btn btn-secondary" style={{ padding: '0.375rem 0.75rem', fontSize: '0.75rem' }} onClick={() => rejectUser(staff.uid)}>Reject</button>
+                  <button className="btn btn-primary" style={{ padding: '0.375rem 0.75rem', fontSize: '0.75rem' }} onClick={() => approveUser(staff.uid)}>Approve</button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div className="grid-2">
         <div>

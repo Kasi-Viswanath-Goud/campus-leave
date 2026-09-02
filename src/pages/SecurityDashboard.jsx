@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAppContext } from '../context/AppContext';
-import { Shield, Search, CheckCircle, XCircle, LogOut } from 'lucide-react';
+import { Shield, Search, CheckCircle, LogOut } from 'lucide-react';
 
 const SecurityDashboard = () => {
   const { requests, markAsLeft } = useAppContext();

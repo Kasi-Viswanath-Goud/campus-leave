@@ -3,6 +3,7 @@ import { MOCK_USERS, MOCK_REQUESTS } from '../data/mockData';
 
 const AppContext = createContext();
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAppContext = () => useContext(AppContext);
 
 export const AppProvider = ({ children }) => {
@@ -40,10 +41,13 @@ export const AppProvider = ({ children }) => {
   const login = (identifier) => {
     const user = users.find(u => u.roll === identifier || u.email === identifier);
     if (user) {
+      if (user.status === 'pending') {
+        return { success: false, message: 'Your account is pending admin approval.' };
+      }
       setCurrentUser(user);
-      return true;
+      return { success: true };
     }
-    return false;
+    return { success: false, message: 'Invalid credentials. User not found.' };
   };
 
   const registerStudent = (studentData) => {
@@ -54,6 +58,25 @@ export const AppProvider = ({ children }) => {
     };
     setUsers([...users, newStudent]);
     setCurrentUser(newStudent);
+  };
+
+  const registerStaff = (staffData, role) => {
+    const newStaff = {
+      ...staffData,
+      uid: `${role}_${Date.now()}`,
+      role: role,
+      status: 'pending'
+    };
+    setUsers([...users, newStaff]);
+    return { success: true };
+  };
+
+  const approveUser = (uid) => {
+    setUsers(users.map(u => u.uid === uid ? { ...u, status: 'approved' } : u));
+  };
+
+  const rejectUser = (uid) => {
+    setUsers(users.filter(u => u.uid !== uid));
   };
 
   const logout = () => {
@@ -98,11 +121,15 @@ export const AppProvider = ({ children }) => {
 
   return (
     <AppContext.Provider value={{
+      users,
       currentUser,
       requests,
       login,
       logout,
       registerStudent,
+      registerStaff,
+      approveUser,
+      rejectUser,
       addRequest,
       updateRequestStatus,
       markAsLeft

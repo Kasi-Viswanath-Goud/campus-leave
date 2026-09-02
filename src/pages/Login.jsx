@@ -3,8 +3,10 @@ import { useAppContext } from '../context/AppContext';
 import { LogIn, UserPlus } from 'lucide-react';
 
 const Login = () => {
-  const { login, registerStudent } = useAppContext();
+  const { login, registerStudent, registerStaff } = useAppContext();
   const [isRegistering, setIsRegistering] = useState(false);
+  const [registerType, setRegisterType] = useState('student');
+  const [successMsg, setSuccessMsg] = useState('');
   
   // Login State
   const [identifier, setIdentifier] = useState('');
@@ -27,9 +29,9 @@ const Login = () => {
       return;
     }
     
-    const success = login(identifier);
-    if (!success) {
-      setError('Invalid credentials. User not found.');
+    const result = login(identifier);
+    if (!result.success) {
+      setError(result.message || 'Invalid credentials. User not found.');
     }
   };
 
@@ -40,14 +42,30 @@ const Login = () => {
       return;
     }
 
-    registerStudent({
-      name: regName,
-      roll: regRoll,
-      department: regDept,
-      section: regSection,
-      year: regYear
-    });
-    // registerStudent automatically logs them in
+    if (registerType === 'student') {
+      registerStudent({
+        name: regName,
+        roll: regRoll,
+        department: regDept,
+        section: regSection,
+        year: regYear
+      });
+    } else {
+      const data = {
+        name: regName,
+        email: regRoll
+      };
+      if (registerType === 'incharge') {
+        data.department = regDept;
+        data.section = regSection;
+      }
+      registerStaff(data, registerType);
+      setSuccessMsg('Registration successful. Please wait for Admin approval.');
+      setRegName('');
+      setRegRoll('');
+      setRegPassword('');
+      setIsRegistering(false);
+    }
   };
 
   return (
@@ -59,13 +77,19 @@ const Login = () => {
           </div>
           <h2 style={{ margin: '0 0 0.5rem 0' }}>Welcome to CampusLeave</h2>
           <p style={{ margin: 0, fontSize: '0.875rem' }}>
-            {isRegistering ? 'Create a student account' : 'Sign in to continue'}
+            {isRegistering ? 'Create an account' : 'Sign in to continue'}
           </p>
         </div>
 
         {error && (
           <div style={{ backgroundColor: 'var(--danger-bg)', color: 'var(--danger-text)', padding: '0.75rem', borderRadius: 'var(--radius-md)', marginBottom: '1rem', fontSize: '0.875rem' }}>
             {error}
+          </div>
+        )}
+
+        {successMsg && (
+          <div style={{ backgroundColor: 'var(--success-bg)', color: 'var(--success-text)', padding: '0.75rem', borderRadius: 'var(--radius-md)', marginBottom: '1rem', fontSize: '0.875rem' }}>
+            {successMsg}
           </div>
         )}
 
@@ -100,11 +124,30 @@ const Login = () => {
             </button>
             
             <p style={{ textAlign: 'center', fontSize: '0.875rem', marginTop: '1rem' }}>
-              Don't have an account? <button type="button" onClick={() => { setIsRegistering(true); setError(''); }} style={{ color: 'var(--primary)', fontWeight: 600 }}>Register</button>
+              Don't have an account? <button type="button" onClick={() => { setIsRegistering(true); setError(''); setSuccessMsg(''); }} style={{ color: 'var(--primary)', fontWeight: 600 }}>Register</button>
             </p>
           </form>
         ) : (
           <form onSubmit={handleRegisterSubmit}>
+            <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+              <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem', cursor: 'pointer' }}>
+                <input type="radio" name="regType" checked={registerType === 'student'} onChange={() => setRegisterType('student')} />
+                Student
+              </label>
+              <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem', cursor: 'pointer' }}>
+                <input type="radio" name="regType" checked={registerType === 'incharge'} onChange={() => setRegisterType('incharge')} />
+                Incharge
+              </label>
+              <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem', cursor: 'pointer' }}>
+                <input type="radio" name="regType" checked={registerType === 'admin'} onChange={() => setRegisterType('admin')} />
+                Admin
+              </label>
+              <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem', cursor: 'pointer' }}>
+                <input type="radio" name="regType" checked={registerType === 'security'} onChange={() => setRegisterType('security')} />
+                Security
+              </label>
+            </div>
+
             <div className="form-group">
               <label className="form-label">Full Name</label>
               <input 
@@ -118,49 +161,55 @@ const Login = () => {
             </div>
 
             <div className="form-group">
-              <label className="form-label">Roll Number</label>
+              <label className="form-label">{registerType === 'student' ? 'Roll Number' : 'Email Address'}</label>
               <input 
                 type="text" 
                 className="form-input" 
-                placeholder="e.g. CSE2023015" 
+                placeholder={registerType === 'student' ? "e.g. CSE2023015" : "e.g. name@college.edu"} 
                 value={regRoll}
                 onChange={(e) => setRegRoll(e.target.value)}
                 required 
               />
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.75rem' }}>
-              <div className="form-group">
-                <label className="form-label">Dept</label>
-                <select className="form-select" value={regDept} onChange={(e) => setRegDept(e.target.value)} style={{ padding: '0.625rem 0.5rem' }}>
-                  <option value="CSE">CSE</option>
-                  <option value="ECE">ECE</option>
-                  <option value="MECH">MECH</option>
-                  <option value="CIVIL">CIVIL</option>
-                  <option value="IT">IT</option>
-                </select>
+            {(registerType === 'student' || registerType === 'incharge') && (
+              <div style={{ display: 'grid', gridTemplateColumns: registerType === 'student' ? '1fr 1fr 1fr' : '1fr 1fr', gap: '0.75rem', marginBottom: '1rem' }}>
+                <div className="form-group" style={{ marginBottom: 0 }}>
+                  <label className="form-label">Dept</label>
+                  <select className="form-select" value={regDept} onChange={(e) => setRegDept(e.target.value)} style={{ padding: '0.625rem 0.5rem' }}>
+                    <option value="CSE">CSE</option>
+                    <option value="ECE">ECE</option>
+                    <option value="MECH">MECH</option>
+                    <option value="CIVIL">CIVIL</option>
+                    <option value="IT">IT</option>
+                  </select>
+                </div>
+                
+                <div className="form-group" style={{ marginBottom: 0 }}>
+                  <label className="form-label">Section</label>
+                  <input 
+                    type="text" 
+                    className="form-input" 
+                    placeholder="e.g. A" 
+                    value={regSection}
+                    onChange={(e) => setRegSection(e.target.value)}
+                    required={(registerType === 'student' || registerType === 'incharge')} 
+                  />
+                </div>
+                
+                {registerType === 'student' && (
+                  <div className="form-group" style={{ marginBottom: 0 }}>
+                    <label className="form-label">Year</label>
+                    <select className="form-select" value={regYear} onChange={(e) => setRegYear(e.target.value)} style={{ padding: '0.625rem 0.5rem' }}>
+                      <option value="1st Year">1st</option>
+                      <option value="2nd Year">2nd</option>
+                      <option value="3rd Year">3rd</option>
+                      <option value="4th Year">4th</option>
+                    </select>
+                  </div>
+                )}
               </div>
-              <div className="form-group">
-                <label className="form-label">Section</label>
-                <input 
-                  type="text" 
-                  className="form-input" 
-                  placeholder="e.g. A" 
-                  value={regSection}
-                  onChange={(e) => setRegSection(e.target.value)}
-                  required 
-                />
-              </div>
-              <div className="form-group">
-                <label className="form-label">Year</label>
-                <select className="form-select" value={regYear} onChange={(e) => setRegYear(e.target.value)} style={{ padding: '0.625rem 0.5rem' }}>
-                  <option value="1st Year">1st</option>
-                  <option value="2nd Year">2nd</option>
-                  <option value="3rd Year">3rd</option>
-                  <option value="4th Year">4th</option>
-                </select>
-              </div>
-            </div>
+            )}
 
             <div className="form-group mb-6">
               <label className="form-label">Password</label>
@@ -175,11 +224,11 @@ const Login = () => {
             </div>
 
             <button type="submit" className="btn btn-primary" style={{ width: '100%' }}>
-              <UserPlus size={18} /> Register as Student
+              <UserPlus size={18} /> Register as {registerType.charAt(0).toUpperCase() + registerType.slice(1)}
             </button>
             
             <p style={{ textAlign: 'center', fontSize: '0.875rem', marginTop: '1rem' }}>
-              Already have an account? <button type="button" onClick={() => { setIsRegistering(false); setError(''); }} style={{ color: 'var(--primary)', fontWeight: 600 }}>Sign In</button>
+              Already have an account? <button type="button" onClick={() => { setIsRegistering(false); setError(''); setSuccessMsg(''); }} style={{ color: 'var(--primary)', fontWeight: 600 }}>Sign In</button>
             </p>
           </form>
         )}

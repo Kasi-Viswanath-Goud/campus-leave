@@ -1,6 +1,6 @@
 import React from 'react';
 import { useAppContext } from '../context/AppContext';
-import { Clock, CheckCircle, XCircle, User, Calendar, FileText } from 'lucide-react';
+import { Clock, CheckCircle, XCircle, FileText } from 'lucide-react';
 
 const RequestCard = ({ request }) => {
   const { currentUser, updateRequestStatus } = useAppContext();

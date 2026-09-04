@@ -1,16 +1,43 @@
-# React + Vite
+# Campus Leave Management System
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+A modern web-based application designed to streamline the process of requesting and approving leaves for students on campus. This system provides distinct portals for students to submit leave requests and for administrators/wardens to review, approve, or reject them efficiently.
 
-Currently, two official plugins are available:
+## Features
+- **Student Dashboard:** Submit new leave requests, track their status, and view past request history.
+- **Admin Dashboard:** Review incoming leave requests in real-time, and quickly approve or reject them.
+- **Authentication:** Secure login system with role-based access control for students and administrators.
+- **Responsive UI:** Clean, intuitive interface built with modern React components.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Tech Stack & Skills Used
+This project was built leveraging the following technologies:
+- **Frontend Framework:** [React 19](https://react.dev/) - For building the interactive user interface.
+- **Routing:** [React Router v7](https://reactrouter.com/) - For handling navigation between different views (Login, Dashboards).
+- **Build Tool:** [Vite](https://vitejs.dev/) - For ultra-fast development server and optimized production builds.
+- **Icons:** [Lucide React](https://lucide.dev/) - For beautiful and consistent iconography across the app.
+- **Linting:** [Oxlint](https://oxc.rs/docs/guide/usage/linter.html) - For fast and reliable code linting.
 
-## React Compiler
+## Getting Started
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Prerequisites
+- Node.js (v18 or higher recommended)
+- npm or yarn
 
-## Expanding the Oxlint configuration
+### Installation
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+1. Clone the repository
+2. Install the dependencies:
+   ```bash
+   npm install
+   ```
+3. Start the development server:
+   ```bash
+   npm run dev
+   ```
+4. Open your browser and navigate to the URL provided in the terminal (usually `http://localhost:5173`).
+
+## Available Scripts
+
+- `npm run dev`: Starts the development server with Hot Module Replacement (HMR).
+- `npm run build`: Bundles the app into static files for production.
+- `npm run preview`: Serves the production build locally for testing.
+- `npm run lint`: Runs the linter to catch potential issues in the codebase.
